@@ -12,6 +12,7 @@
     <modules>
         <module>springboot-the-simple-web</module>
         <module>springboot-swagger</module>
+        <module>springboot-javaconsole</module>
     </modules>
 
     <properties>
