@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @ApiModel("分页对象")
-public class PageUtil<T> implements Serializable {
+public class Page<T> implements Serializable {
 
     @ApiModelProperty(value = "页码", dataType = "int")
     private int currentPage;
