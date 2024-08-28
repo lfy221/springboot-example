@@ -21,6 +21,7 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        
         System.out.println("Spring boot is startup...");
 
         System.out.println(apple.getAppleColor());
