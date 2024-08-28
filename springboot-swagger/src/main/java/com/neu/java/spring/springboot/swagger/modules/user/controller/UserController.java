@@ -49,8 +49,10 @@ public class UserController {
     @ResponseBody
     @ApiOperation(value = "根据身份证号获取用户信息", httpMethod = "GET")
     @ApiImplicitParam(paramType = "query", dataType = "String", name = "idno", value = "身份证号", required = true)
-    public User queryLastAttence(String idno) {
+    public User queryUserByIdno(String idno) {
         log.info("queryLastAttence idno: {}", idno);
         return userService.createUser();
     }
+
+
 }
