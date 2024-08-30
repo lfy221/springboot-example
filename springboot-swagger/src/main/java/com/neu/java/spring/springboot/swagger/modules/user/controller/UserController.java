@@ -1,11 +1,16 @@
 package com.neu.java.spring.springboot.swagger.modules.user.controller;
 
 import com.neu.java.spring.springboot.swagger.modules.user.model.User;
+import com.neu.java.spring.springboot.swagger.modules.user.model.UserQueryModel;
+import com.neu.java.spring.springboot.swagger.modules.user.page.UserResult;
 import com.neu.java.spring.springboot.swagger.modules.user.service.IUserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -54,5 +59,53 @@ public class UserController {
         return userService.createUser();
     }
 
+    @GetMapping("/queryUserList")
+    @ResponseBody
+    @ApiOperation(value = "获取用户信息列表", httpMethod = "GET")
+    public List<User> queryUserList() {
+        List<User> list = new ArrayList<>();
+        list.add(userService.createUser());
+        list.add(userService.createUser());
+        list.add(userService.createUser());
+
+        return list;
+    }
+
+    @PostMapping("/queryUserForPage")
+    @ResponseBody
+    @ApiOperation(value = "分页获取用户信息", httpMethod = "POST")
+    public UserResult queryUserForPage(@RequestBody UserQueryModel userQueryModel) {
+        log.info("userQueryModel");
+        return userService.queryUserForPage(userQueryModel);
+    }
+
+    @GetMapping("/queryUserByNameAndPhone")
+    @ResponseBody
+    @ApiOperation(value = "根据用户名和手机号获取用户信息", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "String", name = "name", value = "用户名", required = true),
+            @ApiImplicitParam(paramType = "query", dataType = "String", name = "phone", value = "手机号码")
+    })
+    public User queryUserByNameAndPhone(String name, String phone) {
+        log.info("name: {}, phone: {}", name, phone);
+        User u = userService.createUser();
+        return u;
+    }
+
+    @PostMapping("/setUserLotteryInfo")
+    @ApiOperation(value = "用户购买彩票订单", httpMethod = "POST")
+    public String setUserLotteryInfo(
+            @ApiParam(value = "批量订单号，String数组传输") @RequestParam(value = "numList", required = true) List<String> numList,
+            @ApiParam(value = "订单状态(1:待处理 2:出票中 3:完成 4:关闭)") @RequestParam(value = "status") int status) {
+
+        if(numList != null) {
+            for(String num : numList) {
+                log.info("num: {}", num);
+            }
+        }
+        log.info("status: {}", status);
+
+        return "test ok";
+    }
 
 }
