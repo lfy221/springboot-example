@@ -13,6 +13,7 @@
         <module>springboot-the-simple-web</module>
         <module>springboot-swagger</module>
         <module>springboot-javaconsole</module>
+        <module>springboot-websocket</module>
     </modules>
 
     <properties>
