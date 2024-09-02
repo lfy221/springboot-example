@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class Auth0Interceptor implements HandlerInterceptor {
 
@@ -25,13 +26,25 @@ public class Auth0Interceptor implements HandlerInterceptor {
         response.setStatus(401);
 
         if (StringUtils.isBlank(jwtKey)) {
-
+            responseMessage(response, "token值不能为空");
+            return false;
         }
+
+        String msg = "";
+//        boolean verify = JwtA
 
         return false;
     }
 
-    private void responseMessage(HttpServletResponse response, String message) {
+    /**
+     * 向前端输出消息方法
+     *
+     * @param response
+     * @param message
+     * @throws IOException
+     */
+    private void responseMessage(HttpServletResponse response, String message) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().print(message);
     }
 }
