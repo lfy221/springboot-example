@@ -14,6 +14,7 @@
         <module>springboot-swagger</module>
         <module>springboot-javaconsole</module>
         <module>springboot-jwt</module>
+        <module>springboot-websocket</module>
     </modules>
 
     <properties>
