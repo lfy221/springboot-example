@@ -1,0 +1,7 @@
+server:
+  port: 20000
+  servlet:
+    context-path: /jwt
+
+jwt:
+  key: fa09fecc568d4f1a97ae2b04ab95aaaa
