@@ -95,7 +95,7 @@ public class UserController {
     @PostMapping("/setUserLotteryInfo")
     @ApiOperation(value = "用户购买彩票订单", httpMethod = "POST")
     public String setUserLotteryInfo(
-            @ApiParam(value = "批量订单号，String数组传输") @RequestParam(value = "numList", required = true) List<String> numList,
+            @ApiParam(value = "批量订单号，String数组传输") @RequestParam(value = "numList", required = false) List<String> numList,
             @ApiParam(value = "订单状态(1:待处理 2:出票中 3:完成 4:关闭)") @RequestParam(value = "status") int status) {
 
         if(numList != null) {
