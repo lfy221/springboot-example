@@ -1,5 +1,6 @@
 package com.neu.java.spring.springboot.websocket.common.server;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.neu.java.spring.springboot.websocket.common.model.Result;
@@ -77,6 +78,9 @@ public class WebSocketServer {
         }
     }
 
+    /**
+     * 发送指定图片
+     */
     public void sendPicture(WebSocketSession session, String fileName) {
         FileInputStream input;
         try {
@@ -91,6 +95,54 @@ public class WebSocketServer {
             input.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 往指定频道发送消息
+     */
+    public static void sengMessageToSid(String message, @PathParam("sid") String sid) {
+        try {
+            log.info("发送消息到客户端:{}，报文:{}", sid, message);
+            if(StrUtil.isNotBlank(sid) && websocketMap.containsKey(sid)) {
+                websocketMap.get(sid).sendMessage(message);
+            } else {
+                log.error("客户端{}不在线", sid);
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+
+    /**
+     * 往指定频道发送对象消息
+     */
+    public static void sengObjectToSid(Result result, @PathParam("sid") String sid) {
+        try {
+            log.info("发送对象消息到客户端:{}，对象:{}", sid, result);
+            if(StrUtil.isNotBlank(sid) && websocketMap.containsKey(sid)) {
+                websocketMap.get(sid).sendObject(result);
+            } else {
+                log.error("客户端{}不在线", sid);
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+
+    /**
+     * 往指定频道发送二进制数据
+     */
+    public static void sengBinaryToSid(ByteBuffer data, @PathParam("sid") String sid) {
+        try {
+            log.info("发送二进制数据到客户端:{}", sid);
+            if(StrUtil.isNotBlank(sid) && websocketMap.containsKey(sid)) {
+                websocketMap.get(sid).sendBinary(data);
+            } else {
+                log.error("客户端{}不在线", sid);
+            }
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 
