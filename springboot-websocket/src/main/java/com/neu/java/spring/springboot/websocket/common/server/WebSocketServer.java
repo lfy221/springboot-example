@@ -1,6 +1,7 @@
 package com.neu.java.spring.springboot.websocket.common.server;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.neu.java.spring.springboot.websocket.common.model.Result;
@@ -10,9 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.websocket.EncodeException;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.File;
@@ -35,6 +34,9 @@ public class WebSocketServer {
     /**接收频道sid*/
     private String sid = "";
 
+    /**
+     * 连接建立
+     */
     @OnOpen
     public void onOpen(Session session, @PathParam("sid") String sid) {
         this.session = session;
@@ -49,6 +51,52 @@ public class WebSocketServer {
 
         log.info("新客户端接入频道{}，当前在线数为：{}", sid, getOnlineCount());
 
+        try {
+            sendMessage("连接成功");
+        } catch (IOException e) {
+            log.error(e, "新的客户端接入频道{}异常", sid);
+        }
+    }
+
+
+    /**
+     * 收到客户端消息后广播到toSid
+     */
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        log.info("来自频道{}终端的消息：{}", sid, message);
+        try {
+            if(StrUtil.isNotBlank(message)) {
+                JSONObject jsonObject = new JSONObject(message);
+                jsonObject.set("fromSid", this.sid);
+                String toSid = jsonObject.getStr("toSid");
+                if(hasSid(toSid)) {
+                    websocketMap.get(toSid).sendMessage(jsonObject.toStringPretty());
+                } else {
+                    log.info("获取不到要发送的sid，消息：{}", message);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+
+    /**
+     * 连接关闭
+     */
+    @OnClose
+    public void onClose() {
+        if(websocketMap.containsKey(sid)) {
+            websocketMap.remove(sid);
+            subOnlineCount();
+            log.info("客户端退出频道{}，当前在线数为{}", sid, getOnlineCount());
+        }
+    }
+
+    @OnError
+    public void onError(Session session, Throwable error) {
+        log.error("客户端{}发生错误，原因：{}", sid, error.getMessage());
+        log.error(error);
     }
 
     /**
@@ -104,7 +152,7 @@ public class WebSocketServer {
     public static void sengMessageToSid(String message, @PathParam("sid") String sid) {
         try {
             log.info("发送消息到客户端:{}，报文:{}", sid, message);
-            if(StrUtil.isNotBlank(sid) && websocketMap.containsKey(sid)) {
+            if(hasSid(sid)) {
                 websocketMap.get(sid).sendMessage(message);
             } else {
                 log.error("客户端{}不在线", sid);
@@ -120,7 +168,7 @@ public class WebSocketServer {
     public static void sengObjectToSid(Result result, @PathParam("sid") String sid) {
         try {
             log.info("发送对象消息到客户端:{}，对象:{}", sid, result);
-            if(StrUtil.isNotBlank(sid) && websocketMap.containsKey(sid)) {
+            if(hasSid(sid)) {
                 websocketMap.get(sid).sendObject(result);
             } else {
                 log.error("客户端{}不在线", sid);
@@ -136,7 +184,7 @@ public class WebSocketServer {
     public static void sengBinaryToSid(ByteBuffer data, @PathParam("sid") String sid) {
         try {
             log.info("发送二进制数据到客户端:{}", sid);
-            if(StrUtil.isNotBlank(sid) && websocketMap.containsKey(sid)) {
+            if(hasSid(sid)) {
                 websocketMap.get(sid).sendBinary(data);
             } else {
                 log.error("客户端{}不在线", sid);
@@ -156,5 +204,9 @@ public class WebSocketServer {
 
     public static synchronized void subOnlineCount() {
         onlineNum.decrementAndGet();
+    }
+
+    private static boolean hasSid(String sid) {
+        return StrUtil.isNotBlank(sid) && websocketMap.containsKey(sid);
     }
 }
