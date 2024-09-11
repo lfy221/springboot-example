@@ -28,7 +28,7 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        send("{\\\"msg\\\":\\\"formclient\\\"}");
+        send("{\"msg\":\"formclient\"}");
         System.out.println("open connection");
     }
 
@@ -55,7 +55,7 @@ public class Client extends WebSocketClient {
     }
 
     public static void main(String[] args) throws URISyntaxException {
-        URI uri = new URI("");
+        URI uri = new URI("ws://localhost:10001/ws-demo/websocket/abc");
         Client client = new Client(uri);
         client.connect();
     }
