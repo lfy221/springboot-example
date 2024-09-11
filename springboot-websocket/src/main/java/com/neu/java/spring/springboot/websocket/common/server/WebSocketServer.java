@@ -149,7 +149,7 @@ public class WebSocketServer {
     /**
      * 往指定频道发送消息
      */
-    public static void sengMessageToSid(String message, @PathParam("sid") String sid) {
+    public static void sendMessageToSid(String message, @PathParam("sid") String sid) {
         try {
             log.info("发送消息到客户端:{}，报文:{}", sid, message);
             if(hasSid(sid)) {
@@ -165,7 +165,7 @@ public class WebSocketServer {
     /**
      * 往指定频道发送对象消息
      */
-    public static void sengObjectToSid(Result result, @PathParam("sid") String sid) {
+    public static void sendObjectToSid(Result result, @PathParam("sid") String sid) {
         try {
             log.info("发送对象消息到客户端:{}，对象:{}", sid, result);
             if(hasSid(sid)) {
@@ -181,7 +181,7 @@ public class WebSocketServer {
     /**
      * 往指定频道发送二进制数据
      */
-    public static void sengBinaryToSid(ByteBuffer data, @PathParam("sid") String sid) {
+    public static void sendBinaryToSid(ByteBuffer data, @PathParam("sid") String sid) {
         try {
             log.info("发送二进制数据到客户端:{}", sid);
             if(hasSid(sid)) {
