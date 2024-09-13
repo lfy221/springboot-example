@@ -15,6 +15,7 @@
         <module>springboot-javaconsole</module>
         <module>springboot-jwt</module>
         <module>springboot-websocket</module>
+        <module>springboot-jdbc-procedure</module>
     </modules>
 
     <properties>
