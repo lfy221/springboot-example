@@ -34,7 +34,7 @@ public class StudentDao {
                 student.setScore(resultSet.getInt("score"));
                 student.setUpdatetime(resultSet.getDate("updatetime"));
             }
-        });
+        }, id);
 
         return student.getId() == null ? null : student;
     }

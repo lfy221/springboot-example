@@ -1,7 +1,5 @@
 package com.neu.java.spring;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
