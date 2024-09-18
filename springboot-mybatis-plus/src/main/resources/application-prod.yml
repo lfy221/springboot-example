@@ -1,0 +1,38 @@
+server:
+  port: 10001
+  servlet:
+    context-path: /mybatis-plus
+
+# datasource相关配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/crash_course?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: root
+    password: P@ssw0rd
+
+# mybatis-plus相关配置
+mybatis-plus:
+  # xml扫描，多个目录用逗号或者分号分隔（告诉 Mapper 所对应的 XML 文件位置），"classpath*:/mapper/**/*.xml"
+  # Maven 多模块项目的扫描路径需以 classpath*: 开头 （即加载多个 jar 包下的 XML 文件）
+  mapper-locations: classpath:/mapper/*/*.xml
+  # 别名包扫描路径，通过该属性可以给包中的类注册别名，注册后在 Mapper 对应的 XML 文件中可以直接使用类名，而不用使用全限定的类名(即 XML 中调用的时候不用包含包名)
+  # 比如 resultType="com.neu.java.spring.springboot.mybatisplus.modules.user.entity.User"  --> resultType="User"
+  type-aliases-package: com.neu.java.spring.springboot.mybatisplus.modules
+  # 配置枚举类扫描路径，支持统配符 * 或者 ; 分割
+  type-enums-package: com.neu.java.spring.springboot.mybatisplus.modules.*.entiry
+  configuration:
+    # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
+    map-underscore-to-camel-case: true
+    #开启Mybatis二级缓存，默认为 true。
+    cache-enabled: false
+    #调试输出SQL语句并打印
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", NONE:"未设置主键类型", INPUT:"用户输入ID", ASSIGN_ID:"分配ID (主键类型为number或string）", ASSIGN_UUID:"分配UUID ";
+      id-type: assign_uuid
+      #逻辑删除配置  效果: 使用mp自带方法删除和查找都会附带逻辑删除功能 (自己写的xml不会) 比如查找时 select * from user where deleted=0
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+
