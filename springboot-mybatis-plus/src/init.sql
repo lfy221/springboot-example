@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `crash_course`;
-USE `crash_course`;
+CREATE DATABASE  IF NOT EXISTS `javademo`;
+USE `javademo`;
 
 SET FOREIGN_KEY_CHECKS=0;
 

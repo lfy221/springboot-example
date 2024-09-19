@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.java.spring.springboot.mybatisplus.modules.user.mapper.UserMapper">
+    <select id="selectPageVo" resultType="com.neu.java.spring.springboot.mybatisplus.modules.user.model.UserResult">
+        select name, phone from user
+        <where>
+            <if test="query.name != null and query.name != ''">
+                and name like '%${query.name}%'
+            </if>
+            <if test="query.workTime != -1">
+                and work_time = #{query.workTime}
+            </if>
+            <if test="query.startTime != null and query.startTime != ''">
+                and create_time &gt;= '${query.startTime}'
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>
