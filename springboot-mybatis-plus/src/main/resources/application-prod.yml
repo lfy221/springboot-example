@@ -7,7 +7,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/crash_course?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/javademo?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
     password: P@ssw0rd
 
@@ -20,7 +20,7 @@ mybatis-plus:
   # 比如 resultType="com.neu.java.spring.springboot.mybatisplus.modules.user.entity.User"  --> resultType="User"
   type-aliases-package: com.neu.java.spring.springboot.mybatisplus.modules
   # 配置枚举类扫描路径，支持统配符 * 或者 ; 分割
-  type-enums-package: com.neu.java.spring.springboot.mybatisplus.modules.*.entiry
+  type-enums-package: com.neu.java.spring.springboot.mybatisplus.modules.*.entity
   configuration:
     # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
     map-underscore-to-camel-case: true

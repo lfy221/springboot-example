@@ -1,7 +1,6 @@
 package com.neu.java.spring.springboot.mybatisplus.modules.user.entity;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.neu.java.spring.springboot.mybatisplus.common.enums.IBaseEnum;
 import lombok.Getter;
@@ -20,7 +19,7 @@ public enum GradeEnum implements IBaseEnum<Integer> {
     @JsonValue
     private final String descp;
 
-    //@JsonCreator
+//    @JsonCreator
     GradeEnum(int code, String descp) {
         this.code = code;
         this.descp = descp;
@@ -28,11 +27,11 @@ public enum GradeEnum implements IBaseEnum<Integer> {
 
     @Override
     public String getDescription() {
-        return null;
+        return descp;
     }
 
     @Override
     public Integer getValue() {
-        return null;
+        return code;
     }
 }

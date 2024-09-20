@@ -10,12 +10,12 @@ import java.util.List;
 @SpringBootTest
 public class UserMapperTest {
 
-//    @Autowired
-//    private UserMapper userMapper;
-//
-//    public void getListUser() {
-//        List<User> list = userMapper.selectList(null);
-//        Assert.assertTrue(list.size() >= 0);
-//        list.forEach(System.out::println);
-//    }
+    @Autowired
+    private UserMapper userMapper;
+
+    public void getListUser() {
+        List<User> list = userMapper.selectList(null);
+        Assert.assertTrue(list.size() >= 0);
+        list.forEach(System.out::println);
+    }
 }
