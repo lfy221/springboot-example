@@ -14,7 +14,7 @@ public class MyBatisPlusConfig {
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {
        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-       mapperScannerConfigurer.setBasePackage("com.neu.java.spring.springboot.mybatisplus.module.*.mapper");
+       mapperScannerConfigurer.setBasePackage("com.neu.java.spring.springboot.mybatisplus.modules.*.mapper");
        return mapperScannerConfigurer;
     }
 
