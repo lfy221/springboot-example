@@ -17,6 +17,7 @@
         <module>springboot-websocket</module>
         <module>springboot-jdbc-procedure</module>
         <module>springboot-mybatis-plus</module>
+        <module>springboot-hikari</module>
     </modules>
 
     <properties>
