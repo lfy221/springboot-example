@@ -108,6 +108,7 @@ public class UserServiceTest extends MybatisPlusApplicationTests {
 
 //    @Test
     public void delUser() {
+
         User u = new User();
         u.setName("小羊del");
         u.setPhone("1569669" + new Random().nextInt(10000));

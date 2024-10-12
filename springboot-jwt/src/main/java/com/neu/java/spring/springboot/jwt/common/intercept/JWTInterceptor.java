@@ -1,11 +1,13 @@
 package com.neu.java.spring.springboot.jwt.common.intercept;
 
-import com.auth0.jwt.exceptions.*;
-import com.auth0.jwt.interfaces.Claim;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.neu.java.spring.springboot.jwt.common.util.JwtAuth0Utils;
+import com.neu.java.spring.springboot.jwt.common.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,14 +17,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Auth0Interceptor implements HandlerInterceptor {
-
-    @Value("${jwt.key}")
-    private String jwtKey;
+public class JWTInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // OPTIONS请求不做拦截操作:进行跨域请求的时候，并且请求头中有额外参数，比如token，客户端会先发送一个OPTIONS请求
+
+        //OPTIONS请求不做拦截操作：进行跨域请求的时候，并且请求头中有额外参数，比图token，客户端会先发送一个OPTIONS请求
         if(RequestMethod.OPTIONS.name().equals(request.getMethod())) {
             return true;
         }
@@ -31,44 +31,36 @@ public class Auth0Interceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        if (StringUtils.isBlank(jwtKey)) {
-            responseMessage(response, "token值不能为空");
+        if(StringUtils.isBlank(token)) {
+            responseMessage(response, "token不能为空");
             return false;
         }
 
         String msg = "";
         try {
-            boolean verify = JwtAuth0Utils.verify(jwtKey, token);
+            boolean verify = JwtUtil.verify(token);
             if(verify) {
-                // 验证通过
                 response.setStatus(HttpServletResponse.SC_OK);
-                Map<String, Claim> claimMap = JwtAuth0Utils.getClaims(jwtKey, token);
-                Claim claim = claimMap.get("username");
-                //TODO debug log
-                String username = claim.asString();
-
-                // 通过验证
+                Claims claims = JwtUtil.getClaim(token);
+                String username = (String)claims.get("username");
+                //TODO log.debug username
                 return true;
             }
-        } catch (AlgorithmMismatchException e) {
-            msg = "签名head中声明的算法不匹配";
-        } catch (SignatureVerificationException e) {
+        } catch (SignatureException e) {
             msg = "无效签名";
-        } catch (TokenExpiredException e) {
+        } catch (UnsupportedJwtException e) {
+            msg = "不支持的签名";
+        } catch (ExpiredJwtException e) {
             msg = "token过期";
-        } catch (InvalidClaimException e) {
-            msg = "token包含的值与预期值不同";
-        } catch (JWTVerificationException e) {
-            msg = "token验证失败";
+        } catch (MalformedJwtException e) {
+            msg = "不支持的签名格式";
         } catch (Exception e) {
             msg = "token无效";
         }
 
         Map<String, Object> map = new HashMap<>();
-        map.put("mag", msg);
+        map.put("msg", msg);
         map.put("status", false);
-
-        // 将map转为json
         String json = new ObjectMapper().writeValueAsString(map);
         responseMessage(response, json);
 
@@ -76,8 +68,7 @@ public class Auth0Interceptor implements HandlerInterceptor {
     }
 
     /**
-     * 向前端输出消息方法
-     *
+     * 返回消息给前端
      * @param response
      * @param message
      * @throws IOException
